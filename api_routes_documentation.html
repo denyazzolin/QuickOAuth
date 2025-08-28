@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>API Routes Documentation</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <style>
+        body {
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+
+        .endpoint {
+            border-left: 5px solid #eee;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+        }
+
+        .endpoint h4 {
+            margin-top: 0;
+        }
+
+        .method {
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 4px;
+            color: white;
+        }
+
+        .method-get {
+            background-color: #337ab7;
+        }
+
+        .method-post {
+            background-color: #5cb85c;
+        }
+
+        .method-delete {
+            background-color: #d9534f;
+        }
+
+        .method-options {
+            background-color: #f0ad4e;
+        }
+
+        code {
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h1>API Routes Documentation</h1>
+            <p class="lead">This document describes the API endpoints defined in <code>/home/deny/dev/QuickOauth2/api/routes.js</code>.</p>
+        </div>
+
+        <!-- Core OAuth2/OIDC Endpoints -->
+        <h2>Core OAuth2/OIDC Endpoints</h2>
+        <p>These endpoints form the core of the OAuth2 and OIDC implementation.</p>
+
+        <div class="endpoint">
+            <h4><span class="method method-get">GET</span> <code>/authorize</code></h4>
+            <p><strong>Also:</strong> <code>/idp/:idp/authorize</code></p>
+            <p>Starts the OAuth2 authorization code grant flow. It validates the client and request, then redirects the user to a login page to authenticate. Upon successful login, it redirects back to the client's <code>redirect_uri</code> with an authorization code.</p>
+            <h5>Query Parameters:</h5>
+            <ul>
+                <li><code>response_type</code> (required): Must be "code".</li>
+                <li><code>client_id</code> (required): The ID of the client application.</li>
+                <li><code>redirect_uri</code> (required): The URI to redirect to after authorization.</li>
+                <li><code>scope</code> (optional): A comma-separated list of scopes being requested.</li>
+                <li><code>state</code> (optional): An opaque value used to maintain state between the request and callback.</li>
+            </ul>
+        </div>
+
+        <div class="endpoint">
+            <h4><span class="method method-post">POST</span> <code>/token</code></h4>
+            <p><strong>Also:</strong> <code>/idp/:idp/token</code></p>
+            <p>The OAuth2 token endpoint. It exchanges authorization codes, refresh tokens, or client credentials for an access token (JWT).</p>
+            <h5>Headers:</h5>
+            <ul>
+                <li><code>Authorization</code> (required): Basic authentication header with the client's ID and secret (<code>Basic Base64(client_id:client_secret)</code>).</li>
+            </ul>
+            <h5>Body (form-urlencoded):</h5>
+            <ul>
+                <li><code>grant_type</code> (required): The grant type being used. Supported values:
+                    <ul>
+                        <li><code>authorization_code</code>: Exchanges an authorization code for an access token and refresh token.</li>
+                        <li><code>client_credentials</code>: Obtains an access token using client credentials.</li>
+                        <li><code>refresh_token</code>: Obtains a new access token by presenting a refresh token.</li>
+                    </ul>
+                </li>
+                <li>...other parameters depending on <code>grant_type</code> (e.g., <code>code</code>, <code>redirect_uri</code>, <code>refresh_token</code>).</li>
+            </ul>
+            <h5>Returns:</h5>
+            <p>A JSON object containing the <code>access_token</code>, <code>token_type</code>, <code>expires_in</code>, and optionally a <code>refresh_token</code>.</p>
+        </div>
+
+        <div class="endpoint">
+            <h4><span class="method method-get">GET</span> <code>/.well-known/jwks.json</code></h4>
+            <p><strong>Also:</strong> <code>/idp/:idp/.well-known/jwks.json</code></p>
+            <p>The OIDC standard endpoint that provides the public keys (in JWKS format) used to verify the signature of JWTs issued by the provider.</p>
+            <h5>Returns:</h5>
+            <p>A JSON Web Key Set document.</p>
+        </div>
+
+        <div class="endpoint">
+            <h4><span class="method method-get">GET</span> <code>/.well-known/openid-configuration</code></h4>
+            <p><strong>Also:</strong> <code>/idp/:idp/.well-known/openid-configuration</code></p>
+            <p>The OIDC discovery endpoint. It provides metadata about the provider's configuration, including the URIs of the authorization, token, and JWKS endpoints.</p>
+            <h5>Returns:</h5>
+            <p>A JSON document with the provider's OIDC configuration.</p>
+        </div>
+
+        <!-- User Interaction & Pages -->
+        <h2>User Interaction & Pages</h2>
+        <p>Endpoints related to user authentication and interaction pages.</p>
+
+        <div class="endpoint">
+            <h4><span class="method method-get">GET</span> <code>/page/:page/deliver</code></h4>
+            <p>Serves dynamic HTML pages (like <code>login.html</code> or <code>account.html</code>) from the provider's static assets. It injects necessary data like the authorization code and client ID into the page before sending it.</p>
+            <h5>Query Parameters:</h5>
+            <ul>
+                <li><code>code</code>: The current authorization code.</li>
+                <li><code>idp</code>: The provider name.</li>
+                <li><code>clientid</code>: The client ID requesting authorization.</li>
+                <li><code>redirect_uri</code>: The final redirect URI.</li>
+            </ul>
+        </div>
+
+        <div class="endpoint">
+            <h4><span class="method method-post">POST</span> <code>/login</code></h4>
+            <p><strong>Also:</strong> <code>/idp/:idp/login</code></p>
+            <p>Handles the form submission from the login page. It verifies user credentials against the data model. If successful, it updates the authorization code with the user's identity and either redirects to an account selection page (if extra roles exist) or back to the client's <code>redirect_uri</code>.</p>
+            <h5>Body (form-urlencoded):</h5>
+            <ul>
+                <li><code>code</code> (required): The authorization code from the login page.</li>
+                <li><code>username</code> (required): The user's username.</li>
+                <li><code>password</code> (required): The user's password.</li>
+                <li><code>clientid</code>, <code>redirect_uri</code>, <code>state</code>: Passed through from the login page.</li>
+            </ul>
+        </div>
+
+        <div class="endpoint">
+            <h4><span class="method method-post">POST</span> <code>/account</code></h4>
+            <p><strong>Also:</strong> <code>/idp/:idp/account</code></p>
+            <p>Handles the form submission from the account/role selection page. It updates the authorization code with the selected roles and then redirects to the client's <code>redirect_uri</code>.</p>
+            <h5>Body (form-urlencoded):</h5>
+            <ul>
+                <li><code>code</code> (required): The authorization code.</li>
+                <li><code>acc_id</code> (required): The ID of the selected account/role set.</li>
+            </ul>
+        </div>
+
+        <!-- Identity & Profile Endpoints -->
+        <h2>Identity & Profile Endpoints</h2>
+
+        <div class="endpoint">
+            <h4><span class="method method-get">GET</span> <code>/me</code></h4>
+            <p><strong>Also:</strong> <code>/idp/:idp/me</code></p>
+            <p>Retrieves the profile of the currently authenticated user. Requires a valid JWT in the <code>Authorization</code> header with the 'profile' scope.</p>
+            <h5>Headers:</h5>
+            <ul>
+                <li><code>Authorization</code> (required): <code>Bearer &lt;jwt&gt;</code>.</li>
+            </ul>
+            <h5>Returns:</h5>
+            <p>A JSON object with user information like <code>userid</code>, <code>firstname</code>, <code>lastname</code>, and <code>roles</code>.</p>
+        </div>
+
+        <!-- Helper Endpoints & Utilities -->
+        <h2>Helper Endpoints & Utilities</h2>
+
+        <div class="endpoint">
+            <h4><span class="method method-get">GET</span> <code>/</code></h4>
+            <p>A simple health-check endpoint.</p>
+            <h5>Returns:</h5>
+            <p><code>{ "hello": "World" }</code></p>
+        </div>
+
+        <div class="endpoint">
+            <h4><span class="method method-get">GET</span> <code>/validate</code></h4>
+            <p><strong>Also:</strong> <code>/idp/:idp/validate</code></p>
+            <p>A utility page that demonstrates and tests the entire OAuth2 flow. It can be initiated with a client ID or by providing an existing JWT.</p>
+            <ol>
+                <li>If no token is provided, it initiates the authorization flow.</li>
+                <li>It exchanges the resulting code for a token.</li>
+                <li>It decodes the JWT.</li>
+                <li>It fetches the OIDC discovery document and JWKS.</li>
+                <li>It validates the JWT signature against the public key.</li>
+                <li>It displays the results of each step.</li>
+            </ol>
+            <h5>Query Parameters:</h5>
+            <ul>
+                <li><code>clientid</code> (optional): The client ID to use for the flow.</li>
+                <li><code>authorization</code> (optional): An existing JWT to validate, skipping the authorization flow.</li>
+            </ul>
+        </div>
+
+        <div class="endpoint">
+            <h4><span class="method method-options">OPTIONS</span> <code>/*</code></h4>
+            <p>Handles CORS preflight requests for all defined routes, allowing cross-origin requests from configured origins.</p>
+        </div>
+
+        <!-- Stubs -->
+        <h2>Identity Management (Stubs)</h2>
+        <p>These endpoints are defined but not fully implemented.</p>
+
+        <div class="endpoint">
+            <h4><span class="method method-get">GET</span> <code>/home</code></h4>
+            <p>Placeholder for an identity application home page.</p>
+        </div>
+
+        <div class="endpoint">
+            <h4><span class="method method-post">POST</span> <code>/identity/user</code></h4>
+            <p>Stub for adding or updating a user in the identity pool.</p>
+        </div>
+
+        <div class="endpoint">
+            <h4><span class="method method-get">GET</span> <code>/mgmt/user</code></h4>
+            <p>Stub for getting a user's details for management purposes.</p>
+        </div>
+
+        <div class="endpoint">
+            <h4><span class="method method-delete">DELETE</span> <code>/mgmt/user</code></h4>
+            <p>Stub for deleting a user.</p>
+        </div>
+
+        <div class="endpoint">
+            <h4><span class="method method-post">POST</span> <code>/identity/verify</code></h4>
+            <p>Stub for verifying user credentials directly.</p>
+        </div>
+
+        <!-- Internal Helper Functions -->
+        <h2>Internal Helper Functions</h2>
+        <p>Key functions used internally by the route handlers.</p>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><code>produceJWT(doc, issuer, rt, isAzure)</code></h3>
+            </div>
+            <div class="panel-body">
+                <p>Produces and signs a JSON Web Token (JWT). It gathers user details, client information, and scopes to build the token payload. It selects a signing key based on the provider's configuration (either a fixed key or rotating randomly) and signs the token.</p>
+                <h5>Parameters:</h5>
+                <ul>
+                    <li><code>doc</code>: An object containing details like <code>client_id</code>, <code>userid</code>, <code>provider</code>, and <code>scope</code>.</li>
+                    <li><code>issuer</code>: The issuer URI for the token.</li>
+                    <li><code>rt</code>: An optional refresh token to include in the response.</li>
+                    <li><code>isAzure</code>: A boolean flag to format the token to mimic Azure AD style claims.</li>
+                </ul>
+                <h5>Returns:</h5>
+                <p>A JSON object with the <code>access_token</code> and other token metadata.</p>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><code>oAuthRedirect(fields, uri, res, state, next)</code></h3>
+            </div>
+            <div class="panel-body">
+                <p>A helper function to perform a 302 redirect for OAuth flows. It constructs the final redirect URL by adding the provided fields as query parameters.</p>
+                <h5>Parameters:</h5>
+                <ul>
+                    <li><code>fields</code>: A key-value object of query parameters to add (e.g., <code>{ code: 'xyz' }</code>).</li>
+                    <li><code>uri</code>: A Node.js <code>URL</code> object representing the base redirect URI.</li>
+                    <li><code>res</code>: The server response object.</li>
+                    <li><code>state</code>: The optional state parameter to include in the redirect.</li>
+                    <li><code>next</code>: The next handler in the chain.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><code>returnError(type, code, message)</code></h3>
+            </div>
+            <div class="panel-body">
+                <p>A helper function to create a standard OAuth2 error response object.</p>
+                <h5>Parameters:</h5>
+                <ul>
+                    <li><code>type</code>: The HTTP status code (e.g., "400").</li>
+                    <li><code>code</code>: The OAuth2 error code (e.g., "invalid_request").</li>
+                    <li><code>message</code>: A human-readable error description.</li>
+                </ul>
+                <h5>Returns:</h5>
+                <p>A JSON object like <code>{ "error": "...", "error_description": "..." }</code>.</p>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Grant Processors in <code>token()</code></h3>
+            </div>
+            <div class="panel-body">
+                <p>The <code>/token</code> endpoint uses a set of async functions to handle different grant types:</p>
+                <ul>
+                    <li><strong><code>doAuthCode()</code></strong>:
+                        <p>Handles the <code>authorization_code</code> grant. It finds the provided auth code in the database, validates its expiration, state, and client details. If valid, it produces a JWT and, if configured, a new refresh token.</p>
+                    </li>
+                    <li><strong><code>doClientCreds()</code></strong>:
+                        <p>Handles the <code>client_credentials</code> grant. Since the client is already authenticated via the Authorization header, this function simply generates and returns a JWT for the client.</p>
+                    </li>
+                    <li><strong><code>doRefreshToken()</code></strong>:
+                        <p>Handles the <code>refresh_token</code> grant. It finds the refresh token in the database, retrieves the original authorization code details associated with it, and then runs the <code>doAuthCode()</code> logic to issue a new access token (and potentially a new refresh token).</p>
+                    </li>
+                    <li><strong><code>doToken()</code> and <code>doPassword()</code></strong>:
+                        <p>These are stubs for other grant types that are not currently supported and will return an <code>unsupported_grant_type</code> error.</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+{
+  "name": "authsrv",
+  "version": "1.0.0",
+  "description": "A lightweight Oauth2/OIDC service",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Deny Azzolin",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/formbody": "^7.4.0",
+    "@fastify/multipart": "^8.2.0",
+    "crypto-js": "^4.1.1",
+    "debug": "^4.3.2",
+    "fastify": "^4.27.0",
+    "jsonwebtoken": "^9.0.2",
+    "jwks-rsa": "^2.0.5",
+    "locale": "^0.1.0",
+    "mongodb": "^4.2.0",
+    "q": "^1.5.1",
+    "request": "^2.88.2",
+    "request-ip": "^3.3.0",
+    "restify": "^8.6.0",
+    "restify-cookies": "^0.2.6",
+    "restify-errors": "^8.0.2",
+    "uuid": "^8.3.2"
+  }
+}

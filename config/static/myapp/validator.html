@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="../../favicon.ico">
+
+  <title>Validator</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <style>
+    .outerdiv {
+      width: 400px;
+      position: absolute;
+      left: 50%;
+      top: 0%;
+      transform: translate(-50%, 10%);
+      padding: 20px;
+    }
+  </style>
+
+  <script>
+
+    function writeError(id) {
+      var target = document.getElementById(id);
+      var msg = document.getElementById('msg');
+      target.style.display = 'block';
+      msg.innerHTML = params.err_msg;
+    }
+
+    function getToken(){
+      var token = "$Z05";
+      return token;
+    }
+
+
+  </script>
+
+</head>
+
+<body>
+  <div class="container">
+    <div class="jumbotron">
+      <div class="container">
+        <h3>Validator</h3>
+        <small>This page evaluates the informed JWT in the <mark>authorization</mark> header and tries to validate it
+          using the URL's provider information</small>
+      </div>
+    </div>
+
+
+    <div class="panel panel-warning" style="display:none">
+      <div class="panel-heading">
+        <h3 class="panel-title">Here's the result of a token endpoint call with the auth code $CC</h3>
+      </div>
+      <div class="panel-body" id="theheader"
+        style=" white-space: pre-wrap; white-space: -moz-pre-wrap;white-space: -pre-wrap;white-space: -o-pre-wrap;word-wrap: break-word;">
+        <small>$Z300</small>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">What you sent was</h3>
+      </div>
+      <div class="panel-body" id="theheader"
+        style=" white-space: pre-wrap; white-space: -moz-pre-wrap;white-space: -pre-wrap;white-space: -o-pre-wrap;word-wrap: break-word;">
+        $Z01
+      </div>
+    </div>
+
+
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title">Here's the well-known OIDC config for this issuer</h3>
+      </div>
+      <div class="panel-body" id="theheader"
+        style=" white-space: pre-wrap; white-space: -moz-pre-wrap;white-space: -pre-wrap;white-space: -o-pre-wrap;word-wrap: break-word;">
+        <small>$Z00</small>
+      </div>
+    </div>
+
+
+
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title">This is the JWT decoded, but not yet validated</h3>
+      </div>
+      <div class="panel-body" id="decoded"
+        style=" white-space: pre-wrap; white-space: -moz-pre-wrap;white-space: -pre-wrap;white-space: -o-pre-wrap;word-wrap: break-word;">
+        <small>$Z02</small>
+      </div>
+    </div>
+
+
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title">These are the keys on the OIDC JWKS endpoint</h3>
+      </div>
+      <div class="panel-body" id="keys"
+        style=" white-space: pre-wrap; white-space: -moz-pre-wrap;white-space: -pre-wrap;white-space: -o-pre-wrap;word-wrap: break-word;">
+        <small>$Z03</small>
+      </div>
+    </div>
+
+
+
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <h3 class="panel-title">And here we check if we can validate with the informed KID</h3>
+      </div>
+      <div class="panel-body" id="val"
+        style=" white-space: pre-wrap; white-space: -moz-pre-wrap;white-space: -pre-wrap;white-space: -o-pre-wrap;word-wrap: break-word;">
+        $Z04
+      </div>
+    </div>
+
+
+  </div>
+</body>
+
+</html>

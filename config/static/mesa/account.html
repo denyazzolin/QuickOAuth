@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Account Type Selecion</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <style>
+        .outerdiv {
+            width: 400px;
+            position: absolute;
+            left: 50%;
+            top: 0%;
+            transform: translate(-50%, 10%);
+            padding: 20px;
+        }
+    </style>
+
+    <script>
+
+        var params = null;
+
+        function parseQuery(queryString) {
+            var query = {};
+            var pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+            for (var i = 0; i < pairs.length; i++) {
+                var pair = pairs[i].split('=');
+                query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+            }
+            return query;
+        }
+
+        function getParamsFromQuery() {
+            var q = window.location.search.substring(1);
+            params = parseQuery(q);
+        }
+
+        function writeError(id) {
+            var target = document.getElementById(id);
+            var msg = document.getElementById('msg');
+            target.style.display = 'block';
+            msg.innerHTML = params.err_msg;
+        }
+
+        function sel(value){
+            document.f1.acc_id.value=value;
+            document.f1.submit();
+        }
+
+
+    </script>
+
+</head>
+
+<body>
+
+
+    <div class="outerdiv">
+
+        <form name="f1" class="form-data" action="$LOGIN" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="code" id="code" value="$CODE">
+            <input type="hidden" name="idp" id="idp" value="$IDP">
+            <input type="hidden" name="redirect_uri" id="redirect_uri" value="$REDIRECT_URI">
+            <input type="hidden" name="acc_id" id="acc_id" value="">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Select your account type</h3>
+                </div>
+                <div class="panel-body">
+                    $ACCOUNTS
+                </div>
+            </div>
+        </form>
+
+    </div> <!-- /container -->
+
+    <script>
+        getParamsFromQuery();
+        if (params.error) {
+            writeError("error");
+        }
+    </script>
+</body>
+
+</html>

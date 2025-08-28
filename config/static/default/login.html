@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Signin Form</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <style>
+        .outerdiv {
+            width: 400px;
+            position: absolute;
+            left: 50%;
+            top: 0%;
+            transform: translate(-50%, 10%);
+            padding: 20px;
+        }
+    </style>
+
+    <script>
+
+        var params = null;
+
+        function parseQuery(queryString) {
+            var query = {};
+            var pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+            for (var i = 0; i < pairs.length; i++) {
+                var pair = pairs[i].split('=');
+                query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+            }
+            return query;
+        }
+
+        function getParamsFromQuery() {
+            var q = window.location.search.substring(1);
+            params = parseQuery(q);
+        }
+
+        function writeError(id) {
+            var target = document.getElementById(id);
+            var msg = document.getElementById('msg');
+            target.style.display = 'block';
+            msg.innerHTML = params.err_msg;
+        }
+
+
+    </script>
+
+</head>
+
+<body>
+
+
+    <div class="outerdiv">
+
+        <div class="media">
+            <div class="media-left">
+                <img class="media-object" src="https://cdn.freelogovectors.net/wp-content/uploads/2018/06/acme-logo.png"
+                    width="100"></img>
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading">The Pro Identity Provider</h4>
+
+            </div>
+            <div>
+                <h4></h4>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Please sign in</div>
+            <div class="panel-body">
+                <form name="f1" class="form-signin" action="$LOGIN" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="code" id="code" value="$CODE">
+                    <input type="hidden" name="idp" id="idp" value="$IDP">
+                    <input type="hidden" name="clientid" id="clientid" value="$CLIENTID">
+                    <input type="hidden" name="redirect_uri" id="redirect_uri" value="$REDIRECT_URI">
+                    <label for="inputEmail" class="sr-only">Email address</label>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1" style="width:40px">@</span>
+                        <input type="text" name="username" id="inputEmail" class="form-control"
+                            placeholder="Email address or LDAP" size="50" required autofocus>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1" style="width:40px">#</span>
+                        <label for="inputPassword" class="sr-only">Password</label>
+                        <input type="password" name="password" id="inputPassword" class="form-control"
+                            placeholder="Password" size="50" required>
+                    </div>
+                    <div><br></div>
+                    <div class="well">
+                        You are calling from app <span class="label label-default" id="cid">....</span>
+                    </div>                    
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="remember-me"> Don't bother checking this, will not remember
+                            you
+                        </label>
+                    </div>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+                </form>
+            </div>
+        </div>
+        <div class="alert alert-warning alert-dismissible" role="alert" id="error" style="display:none">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+            <div id="msg">Some message</div>
+        </div>
+
+
+    </div> <!-- /container -->
+
+    <script>
+         getParamsFromQuery();
+        if (params.error) {
+            writeError("error");
+        }
+        if (params.clientid) {
+            document.getElementById("cid").innerText = params.clientid;
+        }
+    </script>
+</body>
+
+</html>

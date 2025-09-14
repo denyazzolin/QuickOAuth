@@ -21,9 +21,6 @@
     "q": "^1.5.1",
     "request": "^2.88.2",
     "request-ip": "^3.3.0",
-    "restify": "^8.6.0",
-    "restify-cookies": "^0.2.6",
-    "restify-errors": "^8.0.2",
     "uuid": "^8.3.2"
   }
 }

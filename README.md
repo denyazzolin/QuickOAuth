@@ -78,6 +78,7 @@ You can also input a base64 JWT via `/validate?authorization=<the JWT>` and the 
 -- The database table and indexes in mongo will be created automatically if not present
 - the **local** provider is ephemeral and any data is lost wehn the service stops
 - Run the service with `nodejs server.js`
+- Needs NodeJS version `18.20.x` or lower (due to deprecated packages on newer versions)
 
 ## How to add/modify data
 

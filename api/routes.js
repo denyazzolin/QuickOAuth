@@ -3,15 +3,13 @@ const { networkInterfaces } = require("os");
 const { nextTick } = require("process");
 const { check } = require("./headers");
 
-const { BadRequestError } = require("restify-errors"),
+const
     { URL } = require('url'),
     config = require('../config/config'),
     debug = require('debug')('api'),
-    errors = require('restify-errors'),
     jwt = require('jsonwebtoken'),
     jwksClient = require('jwks-rsa'),
     uuid = require('uuid'),
-    cookiejar = require('restify-cookies'),
     reqbuilder = require('../utils/requestBuilder');
 
 var auth = null;
